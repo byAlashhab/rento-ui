@@ -4,8 +4,8 @@ import { Input } from "./ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
-import { Dispatch, SetStateAction, useLayoutEffect, useState } from "react";
-import { SignalIcon, UserPlus2 } from "lucide-react";
+import {  useLayoutEffect, useState } from "react";
+import { UserPlus2 } from "lucide-react";
 
 const schema = z.object({
   firstname: z.string().min(1),
