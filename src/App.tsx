@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { Outlet, Route, Routes } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import { Route, Routes } from "react-router-dom";
 import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
 import Home from "./components/Home";
+import PlaceForm from "./components/new/Forms/PlaceForm";
+import ArticleForm from "./components/new/Forms/ArticleForm";
+import New from "./components/new/New";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -12,6 +14,13 @@ function App() {
   const [data, setData] = useState({ isloggedin: false });
 
   const [refetchAuthStatus, setRefetchAuthStatus] = useState<boolean>(false);
+  const [userState, refetchUserState] = useState<boolean>(false);
+
+  const [user, setUser] = useState<{
+    firstname: string;
+    lastname: string;
+    role: string;
+  }>({ firstname: "", lastname: "", role: "" });
 
   // resourses
   useEffect(() => {
@@ -40,6 +49,38 @@ function App() {
     fetchAuthStatus();
   }, [refetchAuthStatus]);
 
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_RENTO_API}/users/user-data`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+
+        const resData: {
+          id: string;
+          firstname: string;
+          lastname: string;
+          role: string;
+        } = await res.json();
+        setUser(resData);
+      } catch (err) {
+        console.error(err);
+        setUser({ firstname: "error", lastname: "error", role: "error" });
+      }
+    }
+
+    if (data.isloggedin) {
+      fetchUserData();
+    }
+  }, [data.isloggedin, userState]);
+
   if (loading) return <p>loading...</p>;
 
   return (
@@ -48,8 +89,9 @@ function App() {
         path="/"
         element={
           <Home
-            setRefetchAuthStatus={setRefetchAuthStatus}
             isloggedin={data.isloggedin}
+            user={user}
+            refetchUserState={refetchUserState}
           />
         }
       />
@@ -63,6 +105,14 @@ function App() {
         }
       />
       <Route path="/signup" element={<SignUp isloggedin={data.isloggedin} />} />
+      {data.isloggedin && (
+        <Route path="/new" element={<New user={user} />}>
+          <Route path="place" element={<PlaceForm />} />
+          {user.role !== "user" && (
+            <Route path="article" element={<ArticleForm />} />
+          )}
+        </Route>
+      )}
     </Routes>
   );
 }

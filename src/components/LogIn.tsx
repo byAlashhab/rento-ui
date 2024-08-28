@@ -57,8 +57,6 @@ function LogIn({
   };
 
   useLayoutEffect(() => {
-    console.log(isloggedin);
-
     if (isloggedin) {
       navigate("/");
     }
