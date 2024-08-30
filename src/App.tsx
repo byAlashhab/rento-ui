@@ -15,6 +15,8 @@ function App() {
 
   const [refetchAuthStatus, setRefetchAuthStatus] = useState<boolean>(false);
   const [userState, refetchUserState] = useState<boolean>(false);
+  const[placesState,refetchPlacesState]=useState<boolean>(false);
+  const[articlesState,refetcharticlesState]=useState<boolean>(false);
 
   const [user, setUser] = useState<{
     firstname: string;

@@ -7,6 +7,8 @@ import {
   ThumbsUpIcon,
 } from "lucide-react";
 import CategoryItem from "./CategoryItem";
+import { Button } from "./ui/button";
+import { Link } from "react-router-dom";
 
 function Home({
   isloggedin,
@@ -33,61 +35,70 @@ function Home({
           </p>
         </h1>
       </main>
+      {isloggedin ? (
+        <>
+          <h2 className="text-center font-bold text-3xl mt-10">
+            Browse From Different Categories
+          </h2>
+          <div className="flex w-24 mx-auto">
+            <p className="w-20 h-1 bg-destructive mb-10 mt-1 mx-auto rounded"></p>
+            <p className="w-2 h-1 bg-destructive mb-10 mt-1 mx-auto rounded"></p>
+          </div>
 
-      <h2 className="text-center font-bold text-3xl mt-10">
-        Browse From Different Categories
-      </h2>
-      <div className="flex w-24 mx-auto">
-        <p className="w-20 h-1 bg-destructive mb-10 mt-1 mx-auto rounded"></p>
-        <p className="w-2 h-1 bg-destructive mb-10 mt-1 mx-auto rounded"></p>
-      </div>
-
-      <div className="flex justify-evenly items-center mb-10">
-        {[
-          {
-            category: "Holiday Rentals",
-            icon: (
-              <div className="bg-red-100 rounded-full p-2">
-                <ThumbsUpIcon className="text-destructive" />
-              </div>
-            ),
-            hoverColor: "hover:bg-red-200",
-          },
-          {
-            category: "Residential Spaces",
-            icon: (
-              <div className="bg-green-100 rounded-full p-2">
-                <HouseIcon className="text-green-500" />
-              </div>
-            ),
-            hoverColor: "hover:bg-green-200",
-          },
-          {
-            category: "Event Spaces",
-            icon: (
-              <div className="bg-purple-100 rounded-full p-2">
-                <CompassIcon className="text-purple-500" />
-              </div>
-            ),
-            hoverColor: "hover:bg-purple-200",
-          },
-          {
-            category: "Commercial Properties",
-            icon: (
-              <div className="bg-sky-100   rounded-full p-2">
-                <DollarSignIcon className="text-sky-500" />
-              </div>
-            ),
-            hoverColor: "hover:bg-sky-200",
-          },
-        ].map((item) => (
-          <CategoryItem
-            category={item.category}
-            icon={item.icon}
-            hoverColor={item.hoverColor}
-          />
-        ))}
-      </div>
+          <div className="flex justify-evenly items-center mb-10">
+            {[
+              {
+                category: "Holiday Rentals",
+                icon: (
+                  <div className="bg-red-100 rounded-full p-2">
+                    <ThumbsUpIcon className="text-destructive" />
+                  </div>
+                ),
+                hoverColor: "hover:bg-red-200",
+              },
+              {
+                category: "Residential Spaces",
+                icon: (
+                  <div className="bg-green-100 rounded-full p-2">
+                    <HouseIcon className="text-green-500" />
+                  </div>
+                ),
+                hoverColor: "hover:bg-green-200",
+              },
+              {
+                category: "Event Spaces",
+                icon: (
+                  <div className="bg-purple-100 rounded-full p-2">
+                    <CompassIcon className="text-purple-500" />
+                  </div>
+                ),
+                hoverColor: "hover:bg-purple-200",
+              },
+              {
+                category: "Commercial Properties",
+                icon: (
+                  <div className="bg-sky-100   rounded-full p-2">
+                    <DollarSignIcon className="text-sky-500" />
+                  </div>
+                ),
+                hoverColor: "hover:bg-sky-200",
+              },
+            ].map((item) => (
+              <CategoryItem
+                category={item.category}
+                icon={item.icon}
+                hoverColor={item.hoverColor}
+              />
+            ))}
+          </div>
+        </>
+      ) : (
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-center text-2xl">
+          <Button asChild>
+            <Link to={"/login"}>Log in to continue</Link>
+          </Button>
+        </div>
+      )}
     </>
   );
 }
