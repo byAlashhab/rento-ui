@@ -15,8 +15,8 @@ function App() {
 
   const [refetchAuthStatus, setRefetchAuthStatus] = useState<boolean>(false);
   const [userState, refetchUserState] = useState<boolean>(false);
-  const[placesState,refetchPlacesState]=useState<boolean>(false);
-  const[articlesState,refetcharticlesState]=useState<boolean>(false);
+  const [placesState, refetchPlacesState] = useState<boolean>(false);
+  const [articlesState, refetchArticlesState] = useState<boolean>(false);
 
   const [user, setUser] = useState<{
     firstname: string;
@@ -83,6 +83,9 @@ function App() {
     }
   }, [data.isloggedin, userState]);
 
+  useEffect(() => {}, [refetchPlacesState]);
+  useEffect(() => {}, [refetchArticlesState]);
+
   if (loading) return <p>loading...</p>;
 
   return (
@@ -108,12 +111,26 @@ function App() {
       />
       <Route path="/signup" element={<SignUp isloggedin={data.isloggedin} />} />
       {data.isloggedin && (
-        <Route path="/new" element={<New user={user} />}>
-          <Route path="place" element={<PlaceForm />} />
-          {user.role !== "user" && (
-            <Route path="article" element={<ArticleForm />} />
-          )}
-        </Route>
+        <>
+          <Route
+            path="/new"
+            element={
+              <New
+                user={user}
+                refetchPlacesState={refetchPlacesState}
+                refetchArticlesState={refetchArticlesState}
+              />
+            }
+          >
+            <Route path="place" element={<PlaceForm />} />
+            {user.role !== "user" && (
+              <Route path="article" element={<ArticleForm />} />
+            )}
+          </Route>
+          <Route path={"/places"} element={<>places</>}/>
+
+          {user.role !== "user" && <Route path={"/articles"} element={<>articles</>}/>}
+        </>
       )}
     </Routes>
   );

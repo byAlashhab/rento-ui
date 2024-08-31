@@ -12,8 +12,9 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Label } from "@/components/ui/label";
+import { useOutletContext } from "react-router-dom";
 
 const schema = z.object({
   availableForRent: z.boolean(),
@@ -43,6 +44,10 @@ function PlaceForm() {
 
   const [selectedCategory, setSelectedCategory] = useState<string>();
   const [successMessage, setSuccessMessage] = useState<string>();
+  const {
+    refetchPlacesState,
+  }: { refetchPlacesState: Dispatch<SetStateAction<boolean>> } =
+    useOutletContext();
 
   const addPlace: SubmitHandler<PlaceTypes> = async (data) => {
     try {
@@ -60,7 +65,7 @@ function PlaceForm() {
 
         reader.readAsDataURL(onIm);
       });
-      
+
       const res = await fetch(`${import.meta.env.VITE_RENTO_API}/places`, {
         method: "POST",
         headers: {
@@ -74,6 +79,7 @@ function PlaceForm() {
 
       if (res.ok) {
         setSuccessMessage(message);
+        refetchPlacesState((prev) => !prev);
       } else {
         setError("root", {
           message,
@@ -205,7 +211,7 @@ function PlaceForm() {
           {errors.availableForRent.message}
         </p>
       )}
-      <Button disabled={isSubmitting}>Add</Button>
+      <Button disabled={isSubmitting}>{isSubmitting ? "..." : "Add"}</Button>
       {errors.root && (
         <p className="text-xs text-destructive">{errors.root.message}</p>
       )}

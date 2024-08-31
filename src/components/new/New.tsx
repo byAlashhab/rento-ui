@@ -1,16 +1,16 @@
 import { Link, Outlet } from "react-router-dom";
 import { Button } from "../ui/button";
+import { Dispatch, SetStateAction } from "react";
 
 function New({
   user,
+  refetchPlacesState,
+  refetchArticlesState,
 }: {
   user: { firstname: string; lastname: string; role: string };
+  refetchPlacesState: Dispatch<SetStateAction<boolean>>;
+  refetchArticlesState: Dispatch<SetStateAction<boolean>>;
 }) {
-
-  console.log(user.role);
-  
-
-
   return (
     <div className="max-w-screen min-h-screen bg-slate-900">
       <h1 className="text-white font-bold text-4xl text-center py-8">
@@ -25,7 +25,7 @@ function New({
           <Link to={"/new/article"}>New article</Link>
         </Button>
       </div>
-      <Outlet />
+      <Outlet context={{ refetchPlacesState, refetchArticlesState }} />
     </div>
   );
 }

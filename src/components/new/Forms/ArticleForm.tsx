@@ -2,8 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useOutletContext } from "react-router-dom";
 import { z } from "zod";
 
 const schema = z.object({
@@ -29,21 +30,24 @@ function ArticleForm() {
   const [successMessage, setSuccessMessage] = useState<string>();
 
   const addArticle: SubmitHandler<FormInputs> = async (data) => {
-    
-    try {
+    const {
+      refetchArticlesState,
+    }: { refetchArticlesState: Dispatch<SetStateAction<boolean>> } =
+      useOutletContext();
 
+    try {
       const image = await new Promise<string>((resolve, reject) => {
         const onIm = data.image[0];
         const reader = new FileReader();
-  
+
         reader.onloadend = () => {
           resolve(reader.result as string);
         };
-  
+
         reader.onerror = (error) => {
           reject(error);
         };
-  
+
         reader.readAsDataURL(onIm);
       });
 
@@ -60,20 +64,16 @@ function ArticleForm() {
 
       if (res.ok) {
         setSuccessMessage(message);
+        refetchArticlesState((prev) => !prev);
       } else {
         setError("root", {
           message,
         });
       }
-
-    }catch(err) {
+    } catch (err) {
       console.error(err);
-      setError("root",{message:"Something went wrong"})
+      setError("root", { message: "Something went wrong" });
     }
-    
-    
-
-
   };
 
   return (
